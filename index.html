@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Clock</title>
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    class Alcometer extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {
+          weight: 0,
+          bottles: 0,
+          time: 0,
+          gender: "male",
+          content: ""
+        }
+        this.handleWeightChange = this.handleWeightChange.bind(this);
+        this.handleBottlesChange = this.handleBottlesChange.bind(this);
+        this.handleTimeChange = this.handleTimeChange.bind(this);
+        this.handleGenderChange = this.handleGenderChange.bind(this);
+        this.calculate = this.calculate.bind(this);
+      }
+
+      handleWeightChange(e) {
+        this.setState({
+          weight: e.target.value
+        })
+      }
+
+      handleBottlesChange(e) {
+        this.setState({
+          bottles: e.target.value
+        })
+
+      }
+
+      handleTimeChange(e) {
+        this.setState({
+          time: e.target.value
+        })
+
+      }
+
+      handleGenderChange(e) {
+        this.setState({
+          gender: e.target.value
+        })
+
+      }
+
+
+      calculate() {
+        // calculate
+        const { bottles, weight, gender, time } = this.state;
+        const litres = bottles * 0.33;
+        const grams = litres * 8 * 4.5;
+        const burning = weight / 10;
+        const gramsleft = grams - (burning * time);
+
+        let weightfactor = 0.7;
+        if (gender === "female") {
+          weightfactor = 0.6;
+        }
+        const result = gramsleft / (weight * weightfactor);
+
+        this.setState({
+          content: result.toFixed(2)
+        })
+      }
+
+      render() {
+        return (
+          <>
+            <h3>Calculating alochol blood level</h3>
+            <div>
+              <label>Weight</label>
+              <input onChange={this.handleWeightChange} type="number"></input>
+            </div>
+            <div>
+              <label>Bottles</label>
+              <input onChange={this.handleBottlesChange} type="number"></input>
+            </div>
+            <div>
+              <label>Time</label>
+              <input onChange={this.handleTimeChange} type="number"></input>
+            </div>
+
+            <div>
+              <label>Gender</label>
+              <select value={this.state.gender} onChange={this.handleGenderChange}>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+            </div>
+
+            <div>
+              <p>{this.state.content}</p>
+            </div>
+
+            <button onClick={this.calculate}>Calculate</button>
+          </>
+        )
+      }
+    }
+    ReactDOM.render(<Alcometer />, document.getElementById('root'));
+  </script>
+</body>
+
+</html>
